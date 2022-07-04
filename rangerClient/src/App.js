@@ -1,5 +1,6 @@
 // https://github.com/Joao-Henrique/React_Express_App_Medium_Tutorial
 
+import { Link } from "react-router-dom";
 import { useEffect, useState } from 'react'
 
 function App() {

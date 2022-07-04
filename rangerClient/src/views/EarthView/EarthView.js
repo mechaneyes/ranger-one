@@ -1,92 +1,34 @@
-// // https://swissmacuser.ch/google-pretty-earth-random-image-link-generator/
-// // import { Wrapper } from "@googlemaps/react-wrapper";
-// import React, { useEffect } from 'react'
-// import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
+import { useEffect, useState } from 'react'
 
-// const containerStyle = {
-//     width: '100vw',
-//     height: '80vh'
-// };
+let EarthView = () => {
+    const [randomSlugNum, setRandomSlugNum] = useState('6578')
+    const [slugNoNum, setSlugNoNum] = useState('')
 
-// const center = {
-//     lat: -3.745,
-//     lng: -38.523
-// };
+    useEffect(() => {
+        fetch("http://localhost:9000/gMapsAPI")
+            .then(res => res.json())
+            .then(result => {
+                console.log('result[0]', result[0].slug)
+                // console.log('result.length', result.length)
 
-// const zoom = {
-//     zoom: 10
-// }
+                let randomSlug = Math.floor(Math.random() * result.length)
+                console.log('randomSlug:', result[randomSlug].slug)
 
-// const EarthView = () => {
-//     let imgSrc
-//     let i = 0
+                let slugToSplit = result[randomSlug].slug.split("-");
+                let slugNum = slugToSplit[slugToSplit.length - 1];
+                setSlugNoNum(slugToSplit.slice(0, -1).join('::'))
 
-//     const { isLoaded } = useJsApiLoader({
-//         id: 'google-map-script',
-//         googleMapsApiKey: process.env.REACT_APP_GOOGLE_API_KEY
-//     })
+                setRandomSlugNum(slugNum)
+            })
+    }, [])
 
-//     const [map, setMap] = React.useState(null)
+    return (
+        <div>
+            <p>slugNum: {randomSlugNum}</p>
+            <p>slugNoNum: {slugNoNum}</p>
+            <img src={`https://www.gstatic.com/prettyearth/assets/full/${randomSlugNum}.jpg`} />
+        </div>
+    )
+}
 
-//     const onLoad = React.useCallback(function callback(map) {
-//         const bounds = new window.google.maps.LatLngBounds(center);
-//         map.fitBounds(bounds);
-//         setMap(map)
-//     }, [])
-
-//     useEffect(() => {
-//         fetch("https://earthview.withgoogle.com/_api/photos.json")
-//             .then(response => response.json())
-//             .then(data => console.log(data[0].slug))
-//     })
-
-//     const onUnmount = React.useCallback(function callback(map) {
-//         setMap(null)
-//     }, [])
-
-//     return isLoaded ? (
-//         <div>
-//             <img src="https://www.gstatic.com/prettyearth/assets/full/1003.jpg" />
-//         </div>
-//     ) : <></>
-
-//     // fetch("https://earthview.withgoogle.com/_api/photos.json")
-//     //     .then(response => response.json())
-//     //     .then(data => console.log(data[0].slug))
-
-//     //     // .then(data => console.log(data[0]))
-//     // //     .then(data => {
-//     // //         const objsArray = data
-//     // //         // console.log(objsArray)
-
-//     // //         while (i < objsArray.length) {
-//     // //             // console.log(objsArray[i].slug)
-//     // //             i++
-//     // //         }
-
-//     // //         imgSrc = '<img src="https://www.gstatic.com/prettyearth/assets/full/1003.jpg" />'
-
-//     // //         // useEffect(() {
-//     // //         //     console.log('imgSrc', imgSrc)
-//     // //         // })
-
-//     // //         // return console.log('imgSrc', imgSrc)
-//     // //         // return <img src="https://www.gstatic.com/prettyearth/assets/full/1003.jpg" />
-//     // //         // return <div>are dub</div>
-
-//     // //         return (
-//     // //             <img src="https://www.gstatic.com/prettyearth/assets/full/1003.jpg" />
-//     // //         )
-//     // //     })
-
-//     // // return (
-//     // //     <img src="https://www.gstatic.com/prettyearth/assets/full/1003.jpg" />
-//     // // )  
-//     // return isLoaded ? (
-//     // <div>
-//     //   <img src="https://www.gstatic.com/prettyearth/assets/full/1003.jpg" />
-//     // </div>
-//     //   ) : <></>
-// }
-
-// export default EarthView
+export default EarthView;
